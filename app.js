@@ -65,33 +65,24 @@
   }
 
   function emptyState(kind) {
-    var d = el('div', 'empty');
-    if (kind === 'one') {
-      d.appendChild(el('h2', '', 'One more dump'));
-      d.appendChild(el('p', '', 'Paste or drop the second config and the differences show up here.'));
-      return d;
-    }
-    d.appendChild(el('h2', '', 'Nothing to compare yet'));
-    var p = el('p', '', 'Paste two dumps above, or drop two .txt files anywhere on the page. In the CLI tab, run ');
-    p.appendChild(el('code', '', 'diff all'));
-    p.appendChild(document.createTextNode(' and copy the output.'));
-    d.appendChild(p);
-    var r = el('div', 'row-btns');
-    ['betaflight', 'inav'].forEach(function (k) {
-      var b = el('button', '', 'Try ' + BFExamples[k].label);
+    var d = el('p', 'empty');
+    if (kind === 'one') { d.textContent = 'One more dump and the differences show up here.'; return d; }
+    d.appendChild(document.createTextNode('Or try an example: '));
+    ['betaflight', 'inav'].forEach(function (k, i) {
+      if (i) d.appendChild(document.createTextNode(' or '));
+      var b = el('button', 'link', BFExamples[k].label);
       b.type = 'button';
       b.addEventListener('click', function () { loadExample(k); });
-      r.appendChild(b);
+      d.appendChild(b);
     });
-    d.appendChild(r);
     return d;
   }
 
   function renderCli() {
     cliEl.textContent = '';
     if (!last || !(last.changed.length + last.onlyA.length + last.onlyB.length)) {
-      cliEl.appendChild(emptyState(A.value.trim() && B.value.trim() ? 'none' : 'one'));
-      if (A.value.trim() && B.value.trim()) cliEl.lastChild.firstChild.textContent = 'Nothing to change';
+      var e = el('p', 'empty', A.value.trim() && B.value.trim() ? 'Nothing to change.' : 'One more dump and the CLI shows up here.');
+      cliEl.appendChild(e);
       return;
     }
     var c = BFDiff.toCli(last, state.dir);
@@ -122,16 +113,15 @@
     var any = !!last && (last.changed.length + last.onlyA.length + last.onlyB.length) > 0;
     $('copy-cli').disabled = !any;
     Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (c) { c.disabled = !last; });
-    $('tab-cli').textContent = state.dir === 'ab' ? 'CLI to turn A into B' : 'CLI to turn B into A';
+    $('toolbar').hidden = !last; $('tabs').hidden = !last;
+    $('dir').textContent = state.dir === 'ab' ? 'A to B' : 'B to A';
+    $('dir').title = 'CLI turns ' + (state.dir === 'ab' ? 'A into B' : 'B into A') + ' (click to flip)';
     renderCli();
 
     resultEl.textContent = '';
     if (!last) { resultEl.appendChild(emptyState(ta || tb ? 'one' : 'empty')); return; }
     if (!any) {
-      var d = el('div', 'empty');
-      d.appendChild(el('h2', '', 'No differences'));
-      d.appendChild(el('p', '', 'Both dumps have the same ' + last.same + ' settings.'));
-      resultEl.appendChild(d);
+      resultEl.appendChild(el('p', 'empty', 'No differences. Both dumps have the same ' + last.same + ' settings.'));
       return;
     }
     var q = $('filter').value.trim().toLowerCase();
@@ -226,7 +216,6 @@
   }
   function setDir(d) {
     state.dir = d;
-    Array.prototype.forEach.call(document.querySelectorAll('[data-dir]'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.dir === d)); });
     render(false);
   }
   function setTab(t) {
@@ -235,6 +224,7 @@
     $('tab-cli').setAttribute('aria-selected', String(t === 'cli'));
     resultEl.hidden = t !== 'diff';
     cliEl.hidden = t !== 'cli';
+    $('dir').hidden = t !== 'cli';
   }
   function copyCli() {
     if (!last) return;
@@ -285,7 +275,6 @@
   A.addEventListener('input', changed);
   B.addEventListener('input', changed);
   $('filter').addEventListener('input', function () { render(false); });
-  $('sample').addEventListener('click', function () { loadExample('betaflight'); });
   $('swap').addEventListener('click', swap);
   $('clear').addEventListener('click', function () { A.value = ''; B.value = ''; $('filter').value = ''; render(false); syncHash(); A.focus(); });
   $('copy-cli').addEventListener('click', copyCli);
@@ -295,7 +284,7 @@
       copy(location.href, location.href.length > 8000 ? 'Link copied, but it is long' : 'Link copied');
     });
   });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-dir]'), function (b) { b.addEventListener('click', function () { setDir(b.dataset.dir); }); });
+  $('dir').addEventListener('click', function () { setDir(state.dir === 'ab' ? 'ba' : 'ab'); });
   Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (b) {
     b.addEventListener('click', function () {
       state.kinds[b.dataset.kind] = !state.kinds[b.dataset.kind];

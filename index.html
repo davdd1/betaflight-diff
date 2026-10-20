@@ -17,18 +17,13 @@
     <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><rect x="5" y="6" width="8" height="20" rx="1.5" fill="#8cc0d9"/><rect x="19" y="6" width="8" height="20" rx="1.5" fill="#b3cc86"/><rect x="13.5" y="14.5" width="5" height="3" rx="1" fill="#e9a53b"/></svg>
     <span>bf<b>diff</b></span>
   </a>
-  <nav class="keys" aria-label="Keyboard shortcuts">
-    <span><kbd>S</kbd> swap</span>
-    <span><kbd>/</kbd> filter</span>
-    <span><kbd>C</kbd> copy CLI</span>
-  </nav>
   <a class="src" href="https://github.com/davdd1/betaflight-diff">Source</a>
 </header>
 
 <main>
   <div class="intro">
     <h1>Betaflight / INAV config diff</h1>
-    <p>Two <code>diff all</code> dumps in, the differences out. Nothing leaves this page.</p>
+    <p>Paste two <code>diff all</code> dumps. Nothing leaves this page.</p>
   </div>
 
   <section class="panes" aria-label="Config inputs">
@@ -59,31 +54,27 @@
   <input type="file" id="file" accept=".txt,.cli,.log,text/plain" hidden>
 
   <section class="bench" aria-label="Result">
-    <div class="toolbar">
+    <div class="toolbar" id="toolbar" hidden>
       <div class="chips" id="chips" role="group" aria-label="Show">
-        <button type="button" class="chip" data-kind="changed" aria-pressed="true"><i></i>changed <b id="n-changed">0</b></button>
-        <button type="button" class="chip" data-kind="onlyA" aria-pressed="true"><i></i>only A <b id="n-onlyA">0</b></button>
-        <button type="button" class="chip" data-kind="onlyB" aria-pressed="true"><i></i>only B <b id="n-onlyB">0</b></button>
+        <button type="button" class="chip" data-kind="changed" aria-pressed="true"><i></i><b id="n-changed">0</b> changed</button>
+        <button type="button" class="chip" data-kind="onlyA" aria-pressed="true"><i></i><b id="n-onlyA">0</b> only A</button>
+        <button type="button" class="chip" data-kind="onlyB" aria-pressed="true"><i></i><b id="n-onlyB">0</b> only B</button>
         <span class="same"><b id="n-same">0</b> identical</span>
       </div>
       <label class="filter"><span class="sr">Filter settings</span>
-        <input id="filter" type="search" placeholder="Filter: pid, gyro, profile 1" autocomplete="off" spellcheck="false">
+        <input id="filter" type="search" placeholder="Filter" autocomplete="off" spellcheck="false">
       </label>
       <div class="actions">
-        <div class="seg" role="group" aria-label="CLI direction">
-          <button type="button" data-dir="ab" aria-pressed="true">A to B</button>
-          <button type="button" data-dir="ba" aria-pressed="false">B to A</button>
-        </div>
-        <button type="button" id="copy-cli" class="primary">Copy CLI</button>
-        <button type="button" id="copy-link">Copy link</button>
-        <button type="button" id="sample">Load example</button>
+        <button type="button" id="copy-link" class="ghost">Copy link</button>
         <button type="button" id="clear" class="ghost">Clear</button>
+        <button type="button" id="copy-cli" class="primary">Copy CLI</button>
       </div>
     </div>
 
-    <div class="tabs" role="tablist">
+    <div class="tabs" id="tabs" role="tablist" hidden>
       <button type="button" role="tab" id="tab-diff" aria-selected="true" aria-controls="result">Differences</button>
-      <button type="button" role="tab" id="tab-cli" aria-selected="false" aria-controls="cli">CLI to turn A into B</button>
+      <button type="button" role="tab" id="tab-cli" aria-selected="false" aria-controls="cli">CLI</button>
+      <button type="button" id="dir" class="dir ghost" data-dir="ab" aria-label="CLI direction" hidden>A to B</button>
       <span class="status" id="status" aria-live="polite"></span>
     </div>
 
@@ -114,8 +105,8 @@
 </main>
 
 <footer>
-  <span>MIT, David Stenman. Not affiliated with Betaflight or INAV.</span>
-  <a href="https://betaflight.com/docs/wiki/guides/current/Cli">Betaflight CLI docs</a>
+  <span class="keys"><span><kbd>S</kbd> swap</span><span><kbd>/</kbd> filter</span><span><kbd>C</kbd> copy CLI</span></span>
+  <span>MIT, David Stenman. Not affiliated with Betaflight or INAV. <a href="https://betaflight.com/docs/wiki/guides/current/Cli">CLI docs</a></span>
 </footer>
 
 <script src="vendor/motion.js"></script>
