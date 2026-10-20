@@ -2,13 +2,13 @@
 
 Paste two Betaflight or INAV `diff all` dumps, see what changed, and get the CLI that turns one into the other.
 
+**Try it: https://davdd1.github.io/betaflight-diff/**
+
 ![bfdiff comparing two Betaflight dumps](docs/screenshot.png)
 
 I kept doing this by eye after every firmware update and every time someone sent me their tune. Generic text diffs are mostly noise (line order, on/off toggles, profiles interleaved), so this one parses the dump first and matches settings by name and profile.
 
 ## Use it
-
-Open `index.html`, or serve the folder (`npm run serve`, then http://127.0.0.1:8000). There is no build and no network access, so it also works from a file on a laptop at the field.
 
 1. Run `diff all` in the Configurator CLI tab and copy the output. Plain `diff` skips the profiles you are not on.
 2. Paste into A and B, or drop `.txt` files on the page. Two files at once go to A and B in order.
@@ -33,7 +33,5 @@ Keys: `S` swap, `/` filter, `C` copy CLI. `Alt+S` swaps while you are typing in 
 - `app.js`, `style.css`, `index.html` the page. `examples.js` two invented setups for the demo.
 - `vendor/motion.js` is [Motion](https://motion.dev) (MIT), used for one reveal animation and skipped with `prefers-reduced-motion`.
 - Fira Code subset in `fonts/` (OFL).
-
-Tests need Node 18 or newer: `npm test`.
 
 MIT, David Stenman. Not affiliated with Betaflight or INAV. CLI reference: https://betaflight.com/docs/wiki/guides/current/Cli
