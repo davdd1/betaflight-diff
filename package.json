@@ -1,0 +1,9 @@
+{
+  "name": "betaflight-diff",
+  "version": "1.0.0",
+  "description": "Compare two Betaflight or INAV CLI diff all dumps in the browser",
+  "license": "MIT",
+  "author": "David Stenman",
+  "scripts": { "test": "node --test", "serve": "python3 -m http.server 8000 --bind 127.0.0.1" },
+  "private": true
+}
